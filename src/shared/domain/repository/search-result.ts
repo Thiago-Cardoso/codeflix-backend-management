@@ -8,8 +8,8 @@ type SearchResultConstructorProps<E extends Entity> = {
   per_page: number;
 };
 
-export class SearchResult<A extends Entity = Entity> extends ValueObject {
-  readonly items: A[];
+export class SearchResult<E extends Entity = Entity> extends ValueObject {
+  readonly items: E[];
   readonly total: number;
   readonly current_page: number;
   readonly per_page: number;
