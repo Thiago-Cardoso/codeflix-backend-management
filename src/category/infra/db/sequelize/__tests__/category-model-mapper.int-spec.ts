@@ -4,7 +4,7 @@ import { CategoryModel } from "../category.model";
 import { CategoryModelMapper } from "../category-model-mapper";
 import { Category } from "../../../../domain/category.entity";
 import { Uuid } from "../../../../../shared/domain/value-objects/uuid.vo";
-import { setupSequelize } from "../../../../../shared/infra/testing/helpers"
+import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
 
 describe("CategoryModelMapper Integration Tests", () => {
   setupSequelize({ models: [CategoryModel] });

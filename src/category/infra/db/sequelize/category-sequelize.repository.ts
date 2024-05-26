@@ -2,12 +2,16 @@ import { Op } from "sequelize";
 import { NotFoundError } from "../../../../shared/domain/errors/not-found.error";
 import { Uuid } from "../../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../../../domain/category.entity";
-import { CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../../domain/category.repository";
+import {
+  CategorySearchParams,
+  CategorySearchResult,
+  ICategoryRepository,
+} from "../../../domain/category.repository";
 import { CategoryModel } from "./category.model";
 import { CategoryModelMapper } from "./category-model-mapper";
 
 export class CategorySequelizeRepository implements ICategoryRepository {
-  sortableFields: string[] =  ["name", "created_at"];
+  sortableFields: string[] = ["name", "created_at"];
 
   constructor(private categoryModel: typeof CategoryModel) {}
 
@@ -21,10 +25,6 @@ export class CategorySequelizeRepository implements ICategoryRepository {
       CategoryModelMapper.toModel(entity).toJSON()
     );
     await this.categoryModel.bulkCreate(modelsProps);
-  }
-
-  private async _get(id: string) {
-    return await this.categoryModel.findByPk(id);
   }
 
   async update(entity: Category): Promise<void> {
@@ -52,6 +52,10 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     const model = await this._get(entity_id.id);
 
     return model ? CategoryModelMapper.toEntity(model) : null;
+  }
+
+  private async _get(id: string) {
+    return await this.categoryModel.findByPk(id);
   }
 
   async findAll(): Promise<Category[]> {
@@ -87,7 +91,6 @@ export class CategorySequelizeRepository implements ICategoryRepository {
   }
 
   getEntity(): new (...args: any[]) => Category {
-   return Category;
+    return Category;
   }
-
 }
