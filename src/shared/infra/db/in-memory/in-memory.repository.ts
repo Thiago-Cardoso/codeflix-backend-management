@@ -1,30 +1,35 @@
 import { Entity } from "../../../domain/entity";
 import { NotFoundError } from "../../../domain/errors/not-found.error";
-import { IRepository, ISearchableRepository } from "../../../domain/repository/repository-interface";
-import { SearchParams, SortDirection } from "../../../domain/repository/search-params";
+import {
+  IRepository,
+  ISearchableRepository,
+} from "../../../domain/repository/repository-interface";
+import {
+  SearchParams,
+  SortDirection,
+} from "../../../domain/repository/search-params";
 import { SearchResult } from "../../../domain/repository/search-result";
 import { ValueObject } from "../../../domain/value-object";
 
 export abstract class InMemoryRepository<
   E extends Entity,
   EntityId extends ValueObject
-> implements IRepository<E, EntityId>{
-
+> implements IRepository<E, EntityId>
+{
   items: E[] = [];
 
-  async insert(entity: any): Promise<void> {
+  async insert(entity: E): Promise<void> {
     this.items.push(entity);
   }
-
   async bulkInsert(entities: any[]): Promise<void> {
-    this.items.push(...entities)
+    this.items.push(...entities);
   }
 
-  async update(entity: any): Promise<void> {
+  async update(entity: E): Promise<void> {
     const indexFound = this.items.findIndex((item) =>
-    item.entity_id.equals(entity.entity_id)
-  );
-    if(indexFound === -1) {
+      item.entity_id.equals(entity.entity_id)
+    );
+    if (indexFound === -1) {
       throw new NotFoundError(entity.entity_id, this.getEntity());
     }
     this.items[indexFound] = entity;
@@ -34,24 +39,21 @@ export abstract class InMemoryRepository<
     const indexFound = this.items.findIndex((item) =>
       item.entity_id.equals(entity_id)
     );
-    if(indexFound === -1) {
+    if (indexFound === -1) {
       throw new NotFoundError(entity_id, this.getEntity());
     }
     this.items.splice(indexFound, 1);
   }
 
   async findById(entity_id: EntityId): Promise<E> {
-   const item = this.items.find((item) => item.entity_id.equals(entity_id));
-   return typeof item === "undefined" ? null : item;
+    const item = this.items.find((item) => item.entity_id.equals(entity_id));
+    return typeof item === "undefined" ? null : item;
   }
 
   async findAll(): Promise<any[]> {
-   return this.items;
+    return this.items;
   }
-
-  abstract getEntity(): new (...args: any[]) => any {
-    throw new Error("Method not implemented.");
-  }
+  abstract getEntity(): new (...args: any[]) => E;
 }
 
 export abstract class InMemorySearchableRepository<
